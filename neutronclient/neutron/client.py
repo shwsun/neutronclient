@@ -20,6 +20,8 @@ from neutronclient.common import utils
 # -------------------------------------------------
 # NOTE(jethro): below are a little things I stuffed
 # -------------------------------------------------
+from oslo_utils import importutils
+
 osprofiler_profiler = importutils.try_import("osprofiler.profiler")
 
 import random
