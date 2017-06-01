@@ -33,6 +33,23 @@ from neutronclient.common import utils
 
 osprofiler_web = importutils.try_import("osprofiler.web")
 
+# -------------------------------------------------
+# NOTE(jethro): below are a little things I stuffed
+# -------------------------------------------------
+osprofiler_profiler = importutils.try_import("osprofiler.profiler")
+
+import random
+import subprocess
+
+def is_sampled(rate):
+    MAX_RANGE = 100
+    if random.randint(0, 100) < MAX_RANGE * rate:
+        return True
+    return False
+
+SAMPLING_RATE = 0.5
+
+
 _logger = logging.getLogger(__name__)
 
 if os.environ.get('NEUTRONCLIENT_DEBUG'):

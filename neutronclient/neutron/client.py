@@ -17,6 +17,23 @@
 from neutronclient.common import utils
 
 
+# -------------------------------------------------
+# NOTE(jethro): below are a little things I stuffed
+# -------------------------------------------------
+osprofiler_profiler = importutils.try_import("osprofiler.profiler")
+
+import random
+import subprocess
+
+def is_sampled(rate):
+    MAX_RANGE = 100
+    if random.randint(0, 100) < MAX_RANGE * rate:
+        return True
+    return False
+
+SAMPLING_RATE = 0.5
+
+
 API_NAME = 'network'
 API_VERSIONS = {
     '2.0': 'neutronclient.v2_0.client.Client',
@@ -62,4 +79,27 @@ def Client(api_version, *args, **kwargs):
         api_version,
         API_VERSIONS,
     )
+
+    # NOTE(jethro): profile demonstrate the --profile, here set to be true by
+    # default. Also note that novaclient has two client instance (one as default
+    # and one is discovered), here the sampling only work on the discovered
+    # client instance.
+    profile = "123"
+    if profile and is_sampled(SAMPLING_RATE):
+        # Initialize the root of the future trace: the created trace ID will
+        # be used as the very first parent to which all related traces will be
+        # bound to. The given HMAC key must correspond to the one set in
+        # nova-api nova.conf, otherwise the latter will fail to check the
+        # request signature and will skip initialization of osprofiler on
+        # the server side.
+        print("sampled")
+        osprofiler_profiler.init(profile)
+    try:
+        trace_id = osprofiler_profiler.get().get_base_id()
+        print("Trace ID: %s" % trace_id)
+        print("Traces are dumped into /home/centos/traces")
+        cmd = "echo " + trace_id + " >> /home/centos/neutron-jobs"
+        subprocess.call(["bash", "-c", cmd])
+    except:
+        pass
     return neutron_client(*args, **kwargs)

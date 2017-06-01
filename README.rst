@@ -1,3 +1,17 @@
+==============================================
+Unleash the protential of tracing in Openstack
+==============================================
+
+
+This is a fork of the python-neutronclient. Changes and modifications are done 
+to enable the ability of tracing openstack cinder component all the time, and 
+with the sampling enforcement to control the overhead. For more information, 
+please contact the tracing team in MOC.
+-- Jethro
+
+Below starts the original content of OpenStack, Neutronclient (ocata)
+
+
 ========================
 Team and repository tags
 ========================
