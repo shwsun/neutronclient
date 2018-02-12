@@ -86,7 +86,7 @@ def Client(api_version, *args, **kwargs):
     # default. Also note that novaclient has two client instance (one as default
     # and one is discovered), here the sampling only work on the discovered
     # client instance.
-    profile = "123"
+    profile = "42"
     if profile and is_sampled(SAMPLING_RATE):
         # Initialize the root of the future trace: the created trace ID will
         # be used as the very first parent to which all related traces will be
